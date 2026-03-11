@@ -1,0 +1,94 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: cnaes_v2
+// Fields:
+//   - cnae_codigo: string (required)
+//   - grupo_atividade: string (required)
+//   - nome_grupo: string
+//   - descricao: string
+//   - baixo_risco: bool
+//   - mei_status: string
+//   - mei_observacao: string
+//   - mei_ocupacoes: list
+//
+// Collection: regras_zoneamento
+// Fields:
+//   - SUBCAT_USO: string (required)
+//   - [zona]: string (permissibilidade)
+//
+// Collection: regras_vias
+// Fields:
+//   - SUBCATEGORIA_DE_USO: string (required)
+//   - LARGURA_MINIMA_DE_VIA: string (required)
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "mionmic@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidCnae(data) {
+      return data.cnae_codigo is string &&
+             data.grupo_atividade is string &&
+             data.cnae_codigo.size() > 0 &&
+             data.grupo_atividade.size() > 0;
+    }
+
+    function isValidZoningRule(data) {
+      return data.SUBCAT_USO is string && data.SUBCAT_USO.size() > 0;
+    }
+
+    function isValidRoadRule(data) {
+      return data.SUBCATEGORIA_DE_USO is string &&
+             data.LARGURA_MINIMA_DE_VIA is string;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // CNAEs: Read for authenticated users, write for admins
+    match /cnaes_v2/{cnaeId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidCnae(request.resource.data);
+    }
+
+    // Zoning Rules: Read for authenticated users, write for admins
+    match /regras_zoneamento/{ruleId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidZoningRule(request.resource.data);
+    }
+
+    // Road Rules: Read for authenticated users, write for admins
+    match /regras_vias/{ruleId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidRoadRule(request.resource.data);
+    }
+
+    // Users: Read/Write for self, read for admins
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}

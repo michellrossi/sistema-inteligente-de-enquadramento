@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "Cnae": {
+      "title": "CNAE",
+      "description": "Dados do CNAE e seu enquadramento na Lei 16.402/16.",
+      "type": "object",
+      "properties": {
+        "cnae_codigo": { "type": "string", "description": "Código do CNAE (ex: 9602-5/01)" },
+        "grupo_atividade": { "type": "string", "description": "Grupo de atividade (ex: nR1-1, nR2-2)" },
+        "nome_grupo": { "type": "string", "description": "Nome do grupo de atividade" },
+        "descricao": { "type": "string", "description": "Descrição da atividade" },
+        "baixo_risco": { "type": "boolean", "description": "Indica se é considerado baixo risco" },
+        "mei_status": { "type": "string", "description": "Status MEI (dispensa, com_licenca, etc.)" },
+        "mei_observacao": { "type": "string", "description": "Observações específicas para MEI" },
+        "mei_ocupacoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nome": { "type": "string" },
+              "obs": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["cnae_codigo", "grupo_atividade"]
+    },
+    "ZoningRule": {
+      "title": "Regra de Zoneamento",
+      "description": "Permissibilidade de subcategorias de uso por zona.",
+      "type": "object",
+      "properties": {
+        "SUBCAT_USO": { "type": "string", "description": "Subcategoria de uso (ex: nR1-1)" },
+        "ZC": { "type": "string", "description": "Permissibilidade na zona ZC" },
+        "ZM": { "type": "string", "description": "Permissibilidade na zona ZM" },
+        "ZER_1": { "type": "string", "description": "Permissibilidade na zona ZER-1" }
+      },
+      "required": ["SUBCAT_USO"]
+    },
+    "RoadRule": {
+      "title": "Regra de Via",
+      "description": "Largura mínima de via para subcategorias de uso.",
+      "type": "object",
+      "properties": {
+        "SUBCATEGORIA_DE_USO": { "type": "string", "description": "Subcategoria de uso" },
+        "LARGURA_MINIMA_DE_VIA": { "type": "string", "description": "Largura mínima em metros ou 'NA'" }
+      },
+      "required": ["SUBCATEGORIA_DE_USO", "LARGURA_MINIMA_DE_VIA"]
+    }
+  },
+  "firestore": {
+    "/cnaes_v2/{cnaeId}": {
+      "schema": "Cnae",
+      "description": "Coleção de CNAEs e seus metadados de zoneamento."
+    },
+    "/regras_zoneamento/{ruleId}": {
+      "schema": "ZoningRule",
+      "description": "Regras de permissibilidade por zona de uso."
+    },
+    "/regras_vias/{ruleId}": {
+      "schema": "RoadRule",
+      "description": "Regras de largura mínima de via por subcategoria."
+    }
+  }
+}
