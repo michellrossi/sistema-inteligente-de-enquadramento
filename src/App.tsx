@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, login, logout } from './firebase';
+import React, { useState } from 'react';
 import { Cnae, ViabilityResult, ViabilityStatus } from './types';
 import CnaeSearch from './components/CnaeSearch';
 import CnaeList from './components/CnaeList';
 import ViabilityAnalysis from './components/ViabilityAnalysis';
 import ReportForm from './components/ReportForm';
-import { LogOut, ShieldCheck, Building2, LayoutDashboard } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [authReady, setAuthReady] = useState(false);
   const [cnaes, setCnaes] = useState<Cnae[]>([]);
   const [analysisResults, setAnalysisResults] = useState<ViabilityResult[]>([]);
   const [worstStatus, setWorstStatus] = useState<ViabilityStatus>('PERMITIDO_30');
-
-  useEffect(() => {
-    return onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setAuthReady(true);
-    });
-  }, []);
 
   const handleAddCnae = (cnae: Cnae) => {
     if (cnaes.some(c => c.cnae_codigo === cnae.cnae_codigo && c.grupo_atividade === cnae.grupo_atividade)) {
@@ -29,7 +18,6 @@ export default function App() {
       return;
     }
     setCnaes(prev => [...prev, cnae]);
-    // Reset analysis when list changes
     setAnalysisResults([]);
   };
 
@@ -42,45 +30,6 @@ export default function App() {
     setAnalysisResults(results);
     setWorstStatus(status);
   };
-
-  if (!authReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-slate-200 text-center"
-        >
-          <div className="mb-6 flex justify-center">
-            <div className="p-4 bg-blue-50 rounded-full">
-              <Building2 className="w-12 h-12 text-blue-600" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2 uppercase tracking-tight">
-            Sistema Inteligente de Enquadramento
-          </h1>
-          <p className="text-slate-600 mb-8">
-            Acesse com sua conta Google para iniciar a análise de viabilidade urbana.
-          </p>
-          <button
-            onClick={login}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
-          >
-            <ShieldCheck className="w-5 h-5" />
-            ENTRAR COM GOOGLE
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20">
@@ -101,20 +50,6 @@ export default function App() {
                 Análise de Viabilidade Multi-CNAE • Lei 16.402/16
               </p>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
-            <div className="text-right hidden sm:block">
-              <p className="text-xs font-bold text-slate-900">{user.displayName}</p>
-              <p className="text-[10px] text-slate-500">{user.email}</p>
-            </div>
-            <button 
-              onClick={logout}
-              className="p-2 text-slate-400 hover:text-red-600 transition-colors"
-              title="Sair"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </header>
