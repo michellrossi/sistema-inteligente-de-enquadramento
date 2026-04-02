@@ -10,19 +10,19 @@ export function calculateViability(
   const grupo = cnae.grupo_atividade;
 
   // 1. Check Zoning Rule
-  const regraZona = regrasZonas.find(r => r.SUBCAT_USO === grupo);
+  // Using bracket notation because the key in the database is "SUBCAT. USO"
+  const regraZona = regrasZonas.find(r => r["SUBCAT. USO"] === grupo);
+  
   let permitidoZona = false;
   if (regraZona && regraZona[zona]) {
     const val = regraZona[zona].toUpperCase();
     permitidoZona = val.includes("SIM") || val.includes("I");
   }
 
-  // 2. Check Road Rule
+  // 2. Check Road Rule (Frontage/Width)
   let permitidoVia = false;
-  const gruposIsentos = ["nR1", "nR2", "Ind-1a", "Ind-1b"];
-  const ehGrupoElegivel = gruposIsentos.some(g => grupo.startsWith(g));
-
-  if (cnae.baixo_risco && ehGrupoElegivel) {
+  
+  if (cnae.baixo_risco) {
     permitidoVia = true;
   } else {
     const regraVia = regrasVias.find(r => r.SUBCATEGORIA_DE_USO === grupo);
@@ -34,6 +34,8 @@ export function calculateViability(
         const minVia = parseFloat(minViaStr);
         permitidoVia = !isNaN(minVia) && larguraVia >= minVia;
       }
+    } else {
+      permitidoVia = true;
     }
   }
 
@@ -43,13 +45,13 @@ export function calculateViability(
 
   if (!permitidoZona) {
     status = 'NAO_PERMITIDO_5';
-    reason = `Proibido na zona ${zona}.`;
+    reason = `Atividade proibida na zona ${zona}.`;
   } else if (!permitidoVia) {
-    status = 'PERMITIDO_10';
-    reason = `Zona OK, mas largura da via (${larguraVia}m) insuficiente.`;
+    status = 'NAO_PERMITIDO_5';
+    reason = `Zoneamento OK, mas metragem de testada/via (${larguraVia}m) insuficiente.`;
   } else {
     status = 'PERMITIDO_30';
-    reason = 'Local totalmente compatível.';
+    reason = 'Local compatível (Zoneamento e Testada atendidos).';
   }
 
   return {

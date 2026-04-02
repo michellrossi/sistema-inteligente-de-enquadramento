@@ -33,8 +33,10 @@ export default function ViabilityAnalysis({ cnaes, onAnalysisComplete }: Props) 
           getDocs(collection(db, "regras_zoneamento")),
           getDocs(collection(db, "regras_vias"))
         ]);
-        setRegrasZonas(zSnapshot.docs.map(d => d.data() as ZoningRule));
-        setRegrasVias(vSnapshot.docs.map(d => d.data() as RoadRule));
+        const zData = zSnapshot.docs.map(d => d.data() as ZoningRule);
+        const vData = vSnapshot.docs.map(d => d.data() as RoadRule);
+        setRegrasZonas(zData);
+        setRegrasVias(vData);
       } catch (e) {
         console.error(e);
       } finally {
@@ -86,7 +88,7 @@ export default function ViabilityAnalysis({ cnaes, onAnalysisComplete }: Props) 
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Largura da Via (metros)</label>
+          <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Testada do Lote / Largura da Via (metros)</label>
           <input
             type="number"
             step="0.1"
