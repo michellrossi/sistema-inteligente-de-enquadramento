@@ -35,21 +35,29 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20">
       {/* Header */}
       <header className="bg-white py-6 shadow-md mb-8 border-b-4 border-blue-900 sticky top-0 z-50">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-4 flex flex-col items-center text-center gap-2">
+          <div className="flex items-center gap-3">
             <img 
               src="https://iili.io/fSppoxe.png" 
               alt="Logo SP" 
               className="h-12 md:h-16 object-contain" 
             />
             <div className="text-left">
-              <h1 className="text-xl md:text-2xl font-extrabold uppercase text-blue-900 tracking-tight leading-none">
-                Sistema Inteligente de Enquadramento
-              </h1>
-              <p className="text-slate-500 text-[10px] md:text-xs mt-1 font-bold uppercase tracking-widest">
-                Análise de Viabilidade Multi-CNAE • Lei 16.402/16
-              </p>
+              <h2 className="text-xl md:text-2xl font-extrabold uppercase text-slate-800 leading-none">
+                CIDADE DE
+              </h2>
+              <h2 className="text-xl md:text-2xl font-extrabold uppercase text-slate-800 leading-none">
+                SÃO PAULO
+              </h2>
             </div>
+          </div>
+          <div className="mt-2">
+            <h1 className="text-xl md:text-3xl font-extrabold uppercase text-blue-800 tracking-tight leading-none">
+              SISTEMA INTELIGENTE DE ENQUADRAMENTO
+            </h1>
+            <p className="text-slate-500 text-xs md:text-sm mt-1 font-bold uppercase tracking-widest">
+              ANÁLISE DE VIABILIDADE MULTI-CNAE • LEI 16.402/16
+            </p>
           </div>
         </div>
       </header>
