@@ -35,8 +35,8 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20">
       {/* Header */}
       <header className="bg-white py-6 shadow-md mb-8 border-b-4 border-blue-900 sticky top-0 z-50">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-4 flex flex-col items-center text-center gap-2">
+          <div className="flex items-center gap-3">
             <img 
               src="https://iili.io/fSppoxe.png" 
               alt="Logo SP" 
