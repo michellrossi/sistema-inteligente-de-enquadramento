@@ -73,7 +73,7 @@ export default function CnaeSearch({ onAdd }: Props) {
           <p className="text-sm font-bold text-gray-500 uppercase mb-3">Selecione o Grupo Específico:</p>
           <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto pr-2">
             {results.map((item, idx) => {
-              const gruposBaixoRisco = ["nR1", "nR2", "Ind-1a", "Ind-1b"];
+              const gruposBaixoRisco = ["nR1", "nR2"];
               const ehGrupoElegivel = item.grupo_atividade && gruposBaixoRisco.some(g => item.grupo_atividade.startsWith(g));
               const isBaixoRisco = item.baixo_risco && ehGrupoElegivel;
 
