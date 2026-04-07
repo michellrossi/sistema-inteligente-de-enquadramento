@@ -26,7 +26,7 @@ export default function CnaeList({ items, onRemove }: Props) {
           </div>
         ) : (
           items.map((item, idx) => {
-            const gruposBaixoRisco = ["nR1", "nR2", "Ind-1a", "Ind-1b"];
+            const gruposBaixoRisco = ["nR1", "nR2"];
             const isBaixoRisco = item.baixo_risco && gruposBaixoRisco.some(g => item.grupo_atividade.startsWith(g));
 
             return (
