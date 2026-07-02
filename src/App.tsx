@@ -4,6 +4,7 @@ import CnaeSearch from './components/CnaeSearch';
 import CnaeList from './components/CnaeList';
 import ViabilityAnalysis from './components/ViabilityAnalysis';
 import ReportForm from './components/ReportForm';
+import DatabaseBackup from './components/DatabaseBackup';
 import { Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -34,8 +35,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20">
       {/* Header */}
-      <header className="bg-white py-6 shadow-md mb-8 border-b-4 border-blue-900 sticky top-0 z-50">
-        <div className="container mx-auto px-4 flex flex-col items-center text-center gap-2">
+      <header className="bg-white py-4 md:py-6 shadow-md mb-8 border-b-4 border-blue-900 sticky top-0 z-50">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img 
               src="https://iili.io/fSppoxe.png" 
@@ -50,6 +51,9 @@ export default function App() {
                 Análise de Viabilidade Multi-CNAE • Lei 16.402/16
               </p>
             </div>
+          </div>
+          <div className="flex-shrink-0">
+            <DatabaseBackup />
           </div>
         </div>
       </header>
